@@ -1,0 +1,20 @@
+{
+  "name": "@nonemore/oh-my-dsh",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Version-aware DeepSeek Harness Standard preset overlay: search-first source inspection and bounded reads",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/render.mjs --check",
+    "render": "node scripts/render.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
