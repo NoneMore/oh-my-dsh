@@ -42,9 +42,9 @@ test('missing and ambiguous Standard presets fail closed', () => {
   assert.throws(() => renderOverlay(source + source), /preset-standard/);
 });
 
-test('preserves existing persona suffix content', () => {
-  const modified = source.replace('prefix: You are a coding agent powered by the {{model}} model.',
-    'prefix: You are a coding agent powered by the {{model}} model.\n          suffix: |\n            Existing rules must stay.');
+test('preserves a valid, correctly indented existing persona suffix', () => {
+  const modified = source.replace(/^( *)(prefix: You are a coding agent powered by the \{\{model\}\} model\.)$/m,
+    (_, indent, prefix) => indent + prefix + '\n' + indent + 'suffix: |\n' + indent + '  Existing rules must stay.');
   const output = renderOverlay(modified);
   assert.match(output, /Existing rules must stay\./);
   assert.match(output, /OH-MY-DSH SOURCE INSPECTION/);
@@ -52,11 +52,11 @@ test('preserves existing persona suffix content', () => {
 });
 
 test('refuses scalar suffix and complete persona', () => {
-  const scalar = source.replace('prefix: You are a coding agent powered by the {{model}} model.',
-    'prefix: You are a coding agent powered by the {{model}} model.\n          suffix: Previous inline rules');
+  const scalar = source.replace(/^( *)(prefix: You are a coding agent powered by the \{\{model\}\} model\.)$/m,
+    (_, indent, prefix) => indent + prefix + '\n' + indent + 'suffix: Previous inline rules');
   assert.throws(() => renderOverlay(scalar), /not a YAML block scalar/);
-  const complete = source.replace('prefix: You are a coding agent powered by the {{model}} model.',
-    'prefix: You are a coding agent powered by the {{model}} model.\n          complete: true');
+  const complete = source.replace(/^( *)(prefix: You are a coding agent powered by the \{\{model\}\} model\.)$/m,
+    (_, indent, prefix) => indent + prefix + '\n' + indent + 'complete: true');
   assert.throws(() => renderOverlay(complete), /complete:true/);
 });
 
